@@ -1,0 +1,34 @@
+name: gestor_archivos
+description: "Práctica 4 - Parte 1: Gestor de archivos multiplataforma (Flutter)."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Rutas del almacenamiento privado de la app (getApplicationDocumentsDirectory, caché).
+  path_provider: ^2.1.4
+  # Persistencia de tema, recientes y favoritos.
+  shared_preferences: ^2.3.2
+  # Compartir archivos con las apps del sistema.
+  share_plus: ^10.1.0
+  # "Abrir con..." para archivos del almacenamiento privado (usa FileProvider).
+  open_filex: ^4.6.0
+  # Detección de tipo MIME por extensión.
+  mime: '>=1.0.0 <3.0.0'
+  # Formateo (pretty print) y validación de XML.
+  xml: ^6.5.0
+  path: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/ejemplo/
