@@ -3,7 +3,7 @@
 **Práctica 4 · Parte 2: Juego con gestión de archivos**
 Desarrollo de aplicaciones móviles nativas · ESCOM IPN · Grupo 7CV4
 
-**Memoria ESCOM** es un juego original de memoria con temática de cómputo. Guarda, carga, visualiza y exporta partidas en **texto plano (.txt), XML (.xml) y JSON (.json)**, y recupera la partida en curso aunque se cierre la app. Funciona **100 % sin conexión**.
+**Memoria ESCOM** Es un juego original de memoria con temática de cómputo. Guarda, carga, visualiza y exporta partidas en **texto plano (.txt), XML (.xml) y JSON (.json)**, y recupera la partida en curso aunque se cierre la app. Funciona **100 % sin conexión**.
 
 > Las versiones del entorno, los pasos completos de instalación y la parte de iOS están en el [README principal](../README.md).
 
@@ -291,24 +291,24 @@ flutter test
 
 | ID | SO / Versión | Dispositivo | Caso | Pasos | Resultado esperado | Resultado obtenido | Evidencia |
 |---|---|---|---|---|---|---|---|
-| J01 | Android 16 / 7.0 | D1, D2 | Funcionamiento offline | Modo avión → jugar, guardar y cargar | Todo funciona sin conexión | | [J01](../docs/capturas/android/J01.png) |
-| J02 | Android 16 | D1 | Nivel 1 Clásico | Nueva partida → Clásico → completar el tablero | Diálogo "¡Ganaste!" con puntuación, tiempo y fallos | | [J02](../docs/capturas/android/J02.png) |
-| J03 | Android 16 | D1 | Nivel 2 Contrarreloj | Nueva partida → Contrarreloj → dejar que se acabe el tiempo | Al llegar a 0:00 aparece "Se acabó el tiempo" | | [J03](../docs/capturas/android/J03.png) |
-| J04 | Android 16 | D1 | Puntuación y racha | Acertar 2 seguidas y fallar 1 | +100, +120, −10; la racha vuelve a 0 | | [J04](../docs/capturas/android/J04.png) |
-| J05 | Android 16 | D1 | Efectos visuales y sonoros | Voltear, acertar y fallar | Animación de volteo, escala al acertar, sonidos y vibración | | [J05](../docs/capturas/android/J05.png) |
-| J06 | Android 16 | D1 | Guardar en TXT | ⋮ → Guardar como nueva → `.txt` | Aparece el archivo `.txt` en Partidas guardadas | | [J06](../docs/capturas/android/J06.png) |
-| J07 | Android 16 | D1 | Guardar en XML | ⋮ → Guardar como nueva → `.xml` | Aparece el archivo `.xml` | | [J07](../docs/capturas/android/J07.png) |
-| J08 | Android 16 | D1 | Guardar en JSON | ⋮ → Guardar como nueva → `.json` | Aparece el archivo `.json` | | [J08](../docs/capturas/android/J08.png) |
-| J09 | Android 16 | D1 | Cargar cada formato | Cargar las partidas de J06, J07 y J08 | Mismo tablero, puntos, tiempo e historial | | [J09](../docs/capturas/android/J09.png) |
-| J10 | Android 16 | D1 | Ver contenido | Partidas → ⋮ → Ver archivo (en cada formato) | Contenido con resaltado, formato, tamaño y ruta | | [J10](../docs/capturas/android/J10.png) |
-| J11 | Android 16 | D1 | Etiquetas y filtro | ⋮ → Etiqueta → "Difícil" → tocar el chip "Difícil" | Solo se muestran las partidas con esa etiqueta | | [J11](../docs/capturas/android/J11.png) |
-| J12 | Android 16 | D1 | Exportar | ⋮ → Exportar a… → elegir Documentos | El archivo aparece en la carpeta elegida; si se cancela, sale "Exportación cancelada" | | [J12](../docs/capturas/android/J12.png) |
-| J13 | Android 16 | D1 | Compartir | ⋮ → Compartir | Se abre la hoja para compartir de Android | | [J13](../docs/capturas/android/J13.png) |
-| J14 | Android 16 | D1 | Archivos dañados | Opciones → Crear archivos dañados → Partidas guardadas | 3 tarjetas rojas con el motivo del error; las demás partidas cargan bien | | [J14](../docs/capturas/android/J14.png) |
-| J15 | Android 16 | D1 | Recuperación tras cerrar | Jugar a medias → cerrar la app a la fuerza desde recientes → reabrir | Botón "Continuar" con el mismo progreso | | [J15](../docs/capturas/android/J15.png) |
-| J16 | Android 16 | D1 | Formato predeterminado | Opciones → XML → nueva partida → 💾 Guardar | Se guarda como `.xml` | | [J16](../docs/capturas/android/J16.png) |
-| J17 | Android 16 / 7.0 | D1, D2 | Temas y modo oscuro | Opciones → Guinda / Azul; cambiar el modo del sistema | Las 4 combinaciones se ven correctamente | | [J17](../docs/capturas/android/J17.png) |
-| J18 | Android 16 | D1 | Interfaz responsiva | Girar el teléfono durante la partida | El tablero se reacomoda y el marcador pasa al lado | | [J18](../docs/capturas/android/J18.png) |
+| J01 | Android 16 / 7.0 | D1, D2 | Funcionamiento offline | Modo avión → jugar, guardar y cargar | Todo funciona sin conexión | | [J01](../docs/capturas/android/J01.jpeg) |
+| J02 | Android 16 | D1 | Nivel 1 Clásico | Nueva partida → Clásico → completar el tablero | Diálogo "¡Ganaste!" con puntuación, tiempo y fallos | | [J02](../docs/capturas/android/J02.jpeg) |
+| J03 | Android 16 | D1 | Nivel 2 Contrarreloj | Nueva partida → Contrarreloj → dejar que se acabe el tiempo | Al llegar a 0:00 aparece "Se acabó el tiempo" | | [J03](../docs/capturas/android/J03.jpeg) |
+| J04 | Android 16 | D1 | Puntuación y racha | Acertar 2 seguidas y fallar 1 | +100, +120, −10; la racha vuelve a 0 | | [J04](../docs/capturas/android/J04.jpeg) |
+| J05 | Android 16 | D1 | Efectos visuales y sonoros | Voltear, acertar y fallar | Animación de volteo, escala al acertar, sonidos y vibración | | [J05](../docs/capturas/android/J05.jpeg) |
+| J06 | Android 16 | D1 | Guardar en TXT | ⋮ → Guardar como nueva → `.txt` | Aparece el archivo `.txt` en Partidas guardadas | | [J06](../docs/capturas/android/J06.jpeg) |
+| J07 | Android 16 | D1 | Guardar en XML | ⋮ → Guardar como nueva → `.xml` | Aparece el archivo `.xml` | | [J07](../docs/capturas/android/J07.jpeg) |
+| J08 | Android 16 | D1 | Guardar en JSON | ⋮ → Guardar como nueva → `.json` | Aparece el archivo `.json` | | [J08](../docs/capturas/android/J08.jpeg) |
+| J09 | Android 16 | D1 | Cargar cada formato | Cargar las partidas de J06, J07 y J08 | Mismo tablero, puntos, tiempo e historial | | [J09](../docs/capturas/android/J09.jpeg) |
+| J10 | Android 16 | D1 | Ver contenido | Partidas → ⋮ → Ver archivo (en cada formato) | Contenido con resaltado, formato, tamaño y ruta | | [J10](../docs/capturas/android/J10.jpeg) |
+| J11 | Android 16 | D1 | Etiquetas y filtro | ⋮ → Etiqueta → "Difícil" → tocar el chip "Difícil" | Solo se muestran las partidas con esa etiqueta | | [J11](../docs/capturas/android/J11.jpeg) |
+| J12 | Android 16 | D1 | Exportar | ⋮ → Exportar a… → elegir Documentos | El archivo aparece en la carpeta elegida; si se cancela, sale "Exportación cancelada" | | [J12](../docs/capturas/android/J12.jpeg) |
+| J13 | Android 16 | D1 | Compartir | ⋮ → Compartir | Se abre la hoja para compartir de Android | | [J13](../docs/capturas/android/J13.jpeg) |
+| J14 | Android 16 | D1 | Archivos dañados | Opciones → Crear archivos dañados → Partidas guardadas | 3 tarjetas rojas con el motivo del error; las demás partidas cargan bien | | [J14](../docs/capturas/android/J14.jpeg) |
+| J15 | Android 16 | D1 | Recuperación tras cerrar | Jugar a medias → cerrar la app a la fuerza desde recientes → reabrir | Botón "Continuar" con el mismo progreso | | [J15](../docs/capturas/android/J15.jpeg) |
+| J16 | Android 16 | D1 | Formato predeterminado | Opciones → XML → nueva partida → 💾 Guardar | Se guarda como `.xml` | | [J16](../docs/capturas/android/J16.jpeg) |
+| J17 | Android 16 / 7.0 | D1, D2 | Temas y modo oscuro | Opciones → Guinda / Azul; cambiar el modo del sistema | Las 4 combinaciones se ven correctamente | | [J17](../docs/capturas/android/J17.jpeg) |
+| J18 | Android 16 | D1 | Interfaz responsiva | Girar el teléfono durante la partida | El tablero se reacomoda y el marcador pasa al lado | | [J18](../docs/capturas/android/J18.jpeg) |
 | J19 | Android 7.0 | D2 | Compatibilidad API 24 | Repetir J02, J06 y J09 en API 24 | Funciona igual | | [J19](../docs/capturas/android/J19.png) |
 | J20 | — | PC | Pruebas unitarias | `cd juego && flutter test` | Las 10 pruebas pasan | | captura de la terminal |
 
@@ -318,13 +318,13 @@ flutter test
 
 | Menú | Partida | Guardar como | Partidas guardadas |
 |---|---|---|---|
-| ![](../docs/capturas/android/J01.png) | ![](../docs/capturas/android/J02.png) | ![](../docs/capturas/android/J06.png) | ![](../docs/capturas/android/J11.png) |
+| ![](../docs/capturas/android/J01.jpeg) | ![](../docs/capturas/android/J02.jpeg) | ![](../docs/capturas/android/J06.jpeg) | ![](../docs/capturas/android/J11.jpeg) |
 
 | Ver archivo (XML) | Archivos dañados | Horizontal | Tema Azul oscuro |
 |---|---|---|---|
-| ![](../docs/capturas/android/J10.png) | ![](../docs/capturas/android/J14.png) | ![](../docs/capturas/android/J18.png) | ![](../docs/capturas/android/J17.png) |
+| ![](../docs/capturas/android/J10.jpeg) | ![](../docs/capturas/android/J14.jpeg) | ![](../docs/capturas/android/J18.jpeg) | ![](../docs/capturas/android/J17.jpeg) |
 
-> Guarda las capturas en `docs/capturas/android/` con esos nombres para que aparezcan aquí.
+
 
 ## Limitaciones conocidas
 
