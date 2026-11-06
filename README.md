@@ -142,7 +142,7 @@ El archivo queda en `build/app/outputs/flutter-apk/app-release.apk`.
 
 ## Compilar y ejecutar en iOS
 
-> Sección a cargo de Velazquez Beltran Brandon. Los valores entre ⟨ ⟩ se llenan con los datos reales del equipo usado.
+> Sección a cargo de Velazquez Beltran Brandon. Se probó el **gestor de archivos** en el simulador de iOS; el **juego** compila con el mismo script pero no se alcanzó a ejecutar (ver `docs/matriz_pruebas_ios.md`).
 
 ### Código específico de iOS (equivalente al de Android)
 
@@ -171,20 +171,20 @@ La interfaz y la lógica en Dart son las mismas; solo cambia el puente nativo. L
 
 | Componente | Versión |
 |---|---|
-| Sistema operativo de desarrollo | macOS ⟨versión⟩ (⟨Mac física / macOS virtualizado⟩) |
-| Xcode | ⟨versión⟩ (`xcodebuild -version`) |
-| Swift | ⟨versión⟩ (`swift --version`) |
-| Flutter / Dart | ⟨igual que en Android: 3.47.2 / 3.13.2⟩ |
-| CocoaPods | ⟨versión⟩ (`pod --version`) |
+| Sistema operativo de desarrollo | macOS Ventura 13.7.8 (**virtualizado** con `sickcodes/docker-osx` sobre Docker Desktop + WSL2) |
+| Xcode | 15.2 (SDK iOS 17.2) |
+| Swift | 5.9 (incluido en Xcode 15.2) |
+| Flutter / Dart | 3.27.x / 3.6.x en macOS (Android usó 3.47.2: Ventura 13 no ejecuta Dart reciente). `flutter precache --ios` es necesario. |
+| CocoaPods | 1.15.2 (Ruby 2.6 del sistema; se fijaron gemas antiguas) |
 | **iOS mínimo (deployment target)** | **15.0** |
 
 ### Dispositivos de prueba (iOS)
 
 | Dispositivo | Tipo | Versión de iOS | Uso |
 |---|---|---|---|
-| iPhone ⟨modelo⟩ | Simulador | iOS ⟨versión⟩ | Pruebas principales |
-| iPhone ⟨modelo⟩ | Simulador | iOS 15.x | Compatibilidad mínima |
-| iPad ⟨modelo⟩ | Simulador | iPadOS ⟨versión⟩ | Pantalla grande y orientación |
+| iPhone 15 Pro | Simulador | iOS 17.2 | Pruebas principales |
+| iPhone (iOS 15.x) | Simulador | — | **No probado** |
+| iPad | Simulador | — | **No probado** |
 
 ### 1. Preparar el entorno (una sola vez)
 
@@ -254,6 +254,10 @@ cd ../juego && flutter test
 | `The iOS deployment target ... is set to 13.0, but the range ... 15.0` | Fija 15.0 en Xcode (*Minimum Deployments*) y en `ios/Podfile`; ejecuta `pod install` otra vez. |
 | El selector no muestra la carpeta deseada en el simulador | Crea archivos de prueba en la app **Archivos** → *En mi iPhone* (o arrástralos desde el Mac al simulador). |
 | Permiso a una carpeta "ya no es válido" tras reinstalar la app | Es normal: los bookmarks se borran al desinstalar. Vuelve a autorizar la carpeta. |
+| Pantalla **negra** en el simulador (macOS virtualizado sin GPU/Metal) | Con Flutter ≥ 3.29 no se puede desactivar Impeller. Se usó Flutter **3.27.x** y `flutter run -d iPhone --no-enable-impeller` (equivale a `FLTEnableImpeller=false` en `Info.plist`). En un Mac real no hace falta. |
+| `Flutter.xcframework` no encontrado al hacer `pod install` | Ejecuta `flutter precache --ios`. |
+| `AppDelegate.swift` no compila (`FlutterImplicitEngineDelegate`) | Con Flutter < 3.32 usa la variante clásica (`AppDelegate.clasico.swift`, sin ese protocolo). |
+| `pod` falla con Ruby 2.6 (`ffi`, `Logger`) | Instala gemas antiguas y CocoaPods 1.15.2; desinstala `concurrent-ruby` 1.3.x. |
 | `No such module 'Flutter'` | Abre `Runner.xcworkspace` (no `.xcodeproj`) y ejecuta `flutter pub get` antes. |
 
 ### Permisos y seguridad en iOS
