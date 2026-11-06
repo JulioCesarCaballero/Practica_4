@@ -4,8 +4,9 @@ import 'package:flutter/services.dart';
 
 import '../data/entrada.dart';
 
-/// Puente con el código Kotlin (MainActivity.kt) que implementa el
-/// Storage Access Framework de Android.
+/// Puente con el código nativo que implementa el acceso a archivos autorizados:
+///  - Android: MainActivity.kt (Storage Access Framework).
+///  - iOS: ios/Runner/SafPlugin.swift (UIDocumentPickerViewController + security-scoped bookmarks).
 ///
 /// Es la única parte de la app que depende de la plataforma. Si en otra
 /// plataforma no existe el canal, las llamadas lanzan MissingPluginException,
@@ -13,7 +14,7 @@ import '../data/entrada.dart';
 class SafAndroid {
   static const MethodChannel _canal = MethodChannel('mx.ipn.escom/saf');
 
-  static bool get disponible => Platform.isAndroid;
+  static bool get disponible => Platform.isAndroid || Platform.isIOS;
 
   static Map<String, dynamic>? _mapa(Object? valor) =>
       valor == null ? null : Map<String, dynamic>.from(valor as Map);

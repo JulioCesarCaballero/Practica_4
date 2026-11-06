@@ -142,9 +142,128 @@ El archivo queda en `build/app/outputs/flutter-apk/app-release.apk`.
 
 ## Compilar y ejecutar en iOS
 
-> Sección a cargo de Velazquez Beltran Brandon. Debe incluir: requisitos (macOS, Xcode, CocoaPods), `flutter create --platforms=ios .`, `pod install`, configuración de *Signing & Capabilities* en Xcode, ejecución en el simulador o en un iPhone, y la implementación iOS de los canales `mx.ipn.escom/saf` y `mx.ipn.escom/archivos` (`UIDocumentPickerViewController`).
+> Sección a cargo de Velazquez Beltran Brandon. Los valores entre ⟨ ⟩ se llenan con los datos reales del equipo usado.
 
----
+### Código específico de iOS (equivalente al de Android)
+
+| Android (Kotlin) | iOS (Swift) | Qué hace |
+|---|---|---|
+| `gestor_archivos/android/.../MainActivity.kt` | [`gestor_archivos/ios_nativo/SafPlugin.swift`](gestor_archivos/ios_nativo/SafPlugin.swift) | Canal `mx.ipn.escom/saf`: selector de carpeta/archivo, listar, info y metadatos, copiar, mover, renombrar, eliminar, crear, abrir con, compartir, exportar y espacio libre. |
+| `juego/android/.../MainActivity.kt` | [`juego/ios_nativo/ExportarPlugin.swift`](juego/ios_nativo/ExportarPlugin.swift) | Canal `mx.ipn.escom/archivos`: exportar una partida con el selector de destino de Archivos. |
+| (plantilla) | `ios_nativo/AppDelegate.swift` | Registra el canal al iniciar el motor de Flutter. |
+
+La interfaz y la lógica en Dart son las mismas; solo cambia el puente nativo. Los canales usan **los mismos nombres de método y códigos de error** que en Android, por lo que `lib/` casi no cambió (solo textos y `SafAndroid.disponible`, que ahora también es `true` en iOS).
+
+**Equivalencias de APIs**
+
+| Necesidad | Android | iOS |
+|---|---|---|
+| Elegir carpeta / archivo | `ACTION_OPEN_DOCUMENT_TREE` / `ACTION_OPEN_DOCUMENT` | `UIDocumentPickerViewController(forOpeningContentTypes: [.folder / .item], asCopy: false)` |
+| Permiso persistente | `takePersistableUriPermission` | *Bookmark* de la URL (`bookmarkData`) guardado en `UserDefaults`; se reabre con `URL(resolvingBookmarkData:)` |
+| Acceso a lo elegido | `ContentResolver` + `DocumentsContract` | `startAccessingSecurityScopedResource()` / `stopAccessingSecurityScopedResource()` + `FileManager` |
+| Exportar | `ACTION_CREATE_DOCUMENT` | `UIDocumentPickerViewController(forExporting:asCopy: true)` |
+| Compartir / abrir con | `Intent.ACTION_SEND` / `ACTION_VIEW` | `UIActivityViewController` / `UIDocumentInteractionController` |
+| Tipo de archivo | MIME | `UTType` (`preferredMIMEType`, o el identificador de UTType si no tiene MIME) |
+| Espacio libre | `StatFs` | `volumeAvailableCapacityForImportantUsageKey` |
+| Privacidad | Scoped Storage (sin `READ/WRITE_EXTERNAL_STORAGE`) | Sandbox; no se declara ningún permiso de fotos ni almacenamiento |
+
+### Entorno de desarrollo (iOS)
+
+| Componente | Versión |
+|---|---|
+| Sistema operativo de desarrollo | macOS ⟨versión⟩ (⟨Mac física / macOS virtualizado⟩) |
+| Xcode | ⟨versión⟩ (`xcodebuild -version`) |
+| Swift | ⟨versión⟩ (`swift --version`) |
+| Flutter / Dart | ⟨igual que en Android: 3.47.2 / 3.13.2⟩ |
+| CocoaPods | ⟨versión⟩ (`pod --version`) |
+| **iOS mínimo (deployment target)** | **15.0** |
+
+### Dispositivos de prueba (iOS)
+
+| Dispositivo | Tipo | Versión de iOS | Uso |
+|---|---|---|---|
+| iPhone ⟨modelo⟩ | Simulador | iOS ⟨versión⟩ | Pruebas principales |
+| iPhone ⟨modelo⟩ | Simulador | iOS 15.x | Compatibilidad mínima |
+| iPad ⟨modelo⟩ | Simulador | iPadOS ⟨versión⟩ | Pantalla grande y orientación |
+
+### 1. Preparar el entorno (una sola vez)
+
+1. Necesitas **macOS con Xcode** (instálalo desde la App Store o developer.apple.com y ábrelo una vez para aceptar la licencia).
+2. Configura las herramientas de línea de comandos y descarga el runtime del simulador:
+   ```bash
+   sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+   sudo xcodebuild -runFirstLaunch
+   xcodebuild -downloadPlatform iOS
+   ```
+3. Instala **CocoaPods** (`brew install cocoapods`) y **Flutter** (la misma versión que en Android).
+4. Verifica:
+   ```bash
+   flutter doctor -v
+   ```
+   Las líneas **Flutter**, **Xcode** y **CocoaPods** deben aparecer con ✓. No se necesita cuenta de desarrollador de Apple para usar el simulador.
+
+### 2. Obtener el código y configurar iOS
+
+```bash
+git clone https://github.com/JulioCesarCaballero/Practica_4.git
+cd Practica_4
+./configurar_ios.sh
+```
+
+`configurar_ios.sh` hace, para **cada** app: `flutter create --platforms=ios .` (solo crea `ios/`), copia el código Swift desde `ios_nativo/`, lo agrega al target *Runner* de Xcode, añade a `Info.plist` las claves `UIFileSharingEnabled` y `LSSupportsOpeningDocumentsInPlace`, fija el iOS mínimo en **15.0** (proyecto y Podfile) y ejecuta `pod install`.
+
+<details>
+<summary>Pasos manuales equivalentes (si prefieres no usar el script)</summary>
+
+1. `cd gestor_archivos && flutter create --org mx.ipn.escom --project-name gestor_archivos --platforms=ios .`
+2. Copia `ios_nativo/SafPlugin.swift` y `ios_nativo/AppDelegate.swift` a `ios/Runner/` (reemplaza el AppDelegate generado).
+3. Abre `ios/Runner.xcworkspace` en Xcode → clic derecho en la carpeta *Runner* → *Add Files to "Runner"…* → elige `SafPlugin.swift` y marca el target **Runner**.
+4. Pega en `ios/Runner/Info.plist` el contenido de `ios_nativo/Info.plist.agregar.xml`.
+5. En Xcode: target *Runner* → *General* → *Minimum Deployments* = **iOS 15.0**. En `ios/Podfile` deja `platform :ios, '15.0'`.
+6. `flutter pub get && cd ios && pod install`.
+7. Repite con `juego` usando `ExportarPlugin.swift`.
+</details>
+
+> Si el `AppDelegate.swift` que genera tu versión de Flutter no coincide con el de `ios_nativo/`, usa la **variante B** que viene comentada al final de ese archivo.
+
+### 3. Ejecutar en el simulador
+
+```bash
+open -a Simulator            # elige un iPhone con iOS 15 o superior
+cd gestor_archivos && flutter run
+cd ../juego && flutter run
+```
+
+También puedes abrir `ios/Runner.xcworkspace` en Xcode, elegir un simulador y presionar ▶. En el simulador, la app **Archivos** ya incluye las carpetas *En mi iPhone* e *iCloud Drive* (si no hay sesión de iCloud, solo la primera).
+
+**Dispositivo real (opcional):** en Xcode → *Runner* → *Signing & Capabilities* activa *Automatically manage signing*, elige tu *Team* (sirve un Apple ID gratuito) y cambia el *Bundle Identifier* si Xcode lo pide.
+
+### 4. Pruebas unitarias
+
+```bash
+cd gestor_archivos && flutter test
+cd ../juego && flutter test
+```
+
+### Solución de problemas (iOS)
+
+| Problema | Solución |
+|---|---|
+| `MissingPluginException` en `mx.ipn.escom/saf` o `/archivos` | El `.swift` no está en el target *Runner* o el `AppDelegate` no registra el canal. Revisa el paso 3 de la preparación. |
+| `CocoaPods not installed` / error en `pod install` | `brew install cocoapods`; si falla en Apple Silicon, `sudo gem install ffi` y repite. |
+| `The iOS deployment target ... is set to 13.0, but the range ... 15.0` | Fija 15.0 en Xcode (*Minimum Deployments*) y en `ios/Podfile`; ejecuta `pod install` otra vez. |
+| El selector no muestra la carpeta deseada en el simulador | Crea archivos de prueba en la app **Archivos** → *En mi iPhone* (o arrástralos desde el Mac al simulador). |
+| Permiso a una carpeta "ya no es válido" tras reinstalar la app | Es normal: los bookmarks se borran al desinstalar. Vuelve a autorizar la carpeta. |
+| `No such module 'Flutter'` | Abre `Runner.xcworkspace` (no `.xcodeproj`) y ejecuta `flutter pub get` antes. |
+
+### Permisos y seguridad en iOS
+
+- **No se declaran** permisos de fotos, almacenamiento ni acceso global: se respeta el **sandbox**.
+- El acceso fuera del espacio de la app se hace solo con el **selector de documentos de Archivos** (`UIDocumentPickerViewController`): carpeta, archivo suelto o destino de exportación.
+- El permiso persistente se guarda con *bookmarks* y se puede quitar desde la app (*Ubicaciones*).
+- Antes de abrir el selector, la app explica para qué lo necesita; si el usuario cancela, se respeta su decisión.
+- Antes de escribir se valida el destino (escritura permitida, nombre duplicado, espacio libre) y las acciones destructivas piden confirmación.
+- Los errores se traducen a los mismos códigos que en Android (`PERMISO`, `NO_ENCONTRADO`, `NO_SOPORTADO`, `SIN_ESPACIO`, `SIN_APP`) y se muestran con mensajes claros; nunca cierran la app.
 
 ## Estructura
 
@@ -158,6 +277,7 @@ practica4/
 │   │   ├── platform/    saf_android.dart  ← puente Dart ↔ Kotlin
 │   │   └── ui/          pantalla_inicio, explorador, visor, resaltado, listas, ajustes...
 │   ├── android/app/src/main/kotlin/mx/ipn/escom/gestor_archivos/MainActivity.kt  ← SAF
+│   ├── ios_nativo/      SafPlugin.swift, AppDelegate.swift  ← equivalente en iOS
 │   ├── assets/ejemplo/  imagen de ejemplo
 │   └── test/
 ├── juego/
@@ -168,10 +288,12 @@ practica4/
 │   │   ├── platform/    exportar_android.dart
 │   │   └── ui/          menu, pantalla_juego, partidas, ver_archivo, opciones...
 │   ├── android/app/src/main/kotlin/mx/ipn/escom/juego/MainActivity.kt  ← exportar (SAF)
+│   ├── ios_nativo/      ExportarPlugin.swift, AppDelegate.swift  ← exportar en iOS
 │   ├── assets/sonidos/
 │   └── test/            pruebas de serialización
-├── docs/                reporte, matriz de pruebas, capturas
+├── docs/                reporte, matriz de pruebas, capturas (android/ e ios/)
 ├── configurar_android.ps1 / configurar_android.sh
+├── configurar_ios.sh   ← prepara ios/ en macOS
 └── README.md
 ```
 

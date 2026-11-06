@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
@@ -147,8 +149,8 @@ Future<void> mostrarDetalles(BuildContext context, Entrada original) async {
     ('Tipo', e.esCarpeta ? 'Carpeta' : (e.mime ?? 'No disponible (tipo desconocido)')),
     if (!e.esCarpeta) ('Tamaño', e.tamano == null ? 'No disponible' : '${tamanoLegible(e.tamano)} (${e.tamano} bytes)'),
     ('Modificado', fechaLegible(e.modificado)),
-    ('Creado', e.creado == null ? 'No disponible (Android no expone este dato)' : fechaLegible(e.creado)),
-    ('Origen', e.origen == Origen.local ? 'Almacenamiento privado de la app' : 'Documento autorizado (SAF)'),
+    ('Creado', e.creado == null ? 'No disponible (el sistema no expone este dato)' : fechaLegible(e.creado)),
+    ('Origen', e.origen == Origen.local ? 'Almacenamiento privado de la app' : (Platform.isIOS ? 'Documento autorizado (selector de Archivos)' : 'Documento autorizado (SAF)')),
     ('Ubicación', e.id),
     if (e.origen == Origen.saf) ...[
       ('Escritura', si(e.puedeEscribir || e.puedeCrear)),

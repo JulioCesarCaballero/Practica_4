@@ -22,7 +22,7 @@ String mensajeError(Object e) {
     if (e.code == 'PERMISO') return 'Permiso denegado para escribir en ese destino.';
     return e.message ?? e.code;
   }
-  if (e is MissingPluginException) return 'Esta función solo está disponible en Android.';
+  if (e is MissingPluginException) return 'Esta función no está disponible en esta plataforma.';
   final t = e.toString();
   if (t.contains('No space left') || t.contains('errno = 28')) return 'Almacenamiento insuficiente.';
   return 'Error: $t';

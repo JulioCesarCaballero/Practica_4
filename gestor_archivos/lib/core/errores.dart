@@ -36,7 +36,7 @@ String mensajeError(Object e) {
   }
 
   if (e is MissingPluginException) {
-    return 'Esta función solo está disponible en Android.';
+    return 'Esta función no está disponible en esta plataforma.';
   }
 
   if (e is FileSystemException) {

@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import '../core/formato.dart';
@@ -97,11 +99,9 @@ class _PantallaAjustesState extends State<PantallaAjustes> {
           const Divider(height: 32),
           Text('Acerca de', style: t.titleMedium),
           const SizedBox(height: 8),
-          const Text('Práctica 4 · Parte 1: Gestor de archivos\n'
+          Text('Práctica 4 · Parte 1: Gestor de archivos\n'
               'Desarrollo de aplicaciones móviles nativas · ESCOM IPN\n\n'
-              'Funciona 100 % sin conexión. En Android se respeta Scoped Storage: '
-              'la app solo usa su almacenamiento privado y las carpetas o archivos '
-              'que elijas con el selector del sistema (Storage Access Framework).'),
+              'Funciona 100 % sin conexión. ${Platform.isIOS ? 'En iOS se respeta el sandbox: la app solo usa su almacenamiento privado y las carpetas o archivos que elijas con el selector de Archivos (document picker).' : 'En Android se respeta Scoped Storage: la app solo usa su almacenamiento privado y las carpetas o archivos que elijas con el selector del sistema (Storage Access Framework).'}'),
         ],
       ),
     );

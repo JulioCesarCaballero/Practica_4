@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import '../core/errores.dart';
@@ -112,7 +114,9 @@ class ExploradorState extends State<Explorador> {
   Future<void> _autorizarCarpeta() async {
     final ok = await _explicar(
       'Autorizar una carpeta',
-      'Android abrirá su selector de archivos. Elige una carpeta y toca "Usar esta carpeta".\n\n'
+      (Platform.isIOS
+              ? 'iOS abrirá la app Archivos. Elige una carpeta y toca "Abrir".\n\n'
+              : 'Android abrirá su selector de archivos. Elige una carpeta y toca "Usar esta carpeta".\n\n') +
           'La app solo podrá ver y modificar esa carpeta (y sus subcarpetas). '
           'No se pide acceso a todo el almacenamiento y puedes quitar el permiso cuando quieras.',
     );
@@ -134,7 +138,7 @@ class ExploradorState extends State<Explorador> {
   Future<void> _abrirArchivoSuelto() async {
     final ok = await _explicar(
       'Abrir un archivo',
-      'Android abrirá su selector para que elijas un archivo. '
+      '${Platform.isIOS ? 'iOS abrirá la app Archivos' : 'Android abrirá su selector'} para que elijas un archivo. '
           'La app solo tendrá acceso al archivo que elijas.',
     );
     if (!ok || !mounted) return;
@@ -385,7 +389,10 @@ class ExploradorState extends State<Explorador> {
           const SizedBox(height: 16),
           Text('Carpetas autorizadas', style: t.titleMedium),
           const SizedBox(height: 4),
-          Text('Carpetas que elegiste con el selector de Android (Storage Access Framework).',
+          Text(
+              Platform.isIOS
+                  ? 'Carpetas que elegiste con el selector de Archivos de iOS (permiso guardado con bookmarks).'
+                  : 'Carpetas que elegiste con el selector de Android (Storage Access Framework).',
               style: t.bodySmall),
           const SizedBox(height: 8),
           if (_error != null)

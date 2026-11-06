@@ -5,7 +5,7 @@ enum Origen {
   /// Almacenamiento privado de la app (dart:io).
   local,
 
-  /// Documento autorizado por el usuario con el selector del sistema (SAF en Android).
+  /// Documento autorizado por el usuario con el selector del sistema (SAF en Android, selector de Archivos en iOS).
   saf,
 }
 
@@ -36,7 +36,7 @@ class Entrada {
   final int? tamano;
   final DateTime? modificado;
 
-  /// Android no expone la fecha de creación; normalmente es null ("No disponible").
+  /// Android no expone la fecha de creación (null = "No disponible"); iOS sí la informa.
   final DateTime? creado;
   final String? mime;
 
@@ -67,6 +67,10 @@ class Entrada {
       origen: Origen.saf,
       tamano: (m['tamano'] as num?)?.toInt(),
       modificado: mod is num && mod > 0 ? DateTime.fromMillisecondsSinceEpoch(mod.toInt()) : null,
+      // Android no la expone; iOS sí (creationDate).
+      creado: m['creado'] is num && (m['creado'] as num) > 0
+          ? DateTime.fromMillisecondsSinceEpoch((m['creado'] as num).toInt())
+          : null,
       mime: m['mime'] as String?,
       raiz: m['raiz'] as String?,
       puedeEscribir: m['puedeEscribir'] == true,

@@ -1,0 +1,9 @@
+<!-- Agregar dentro de <dict> de gestor_archivos/ios/Runner/Info.plist -->
+
+<!-- Muestra la carpeta de documentos de la app dentro de la app Archivos ("En mi iPhone > Gestor de archivos"). -->
+<key>UIFileSharingEnabled</key>
+<true/>
+<!-- Permite abrir documentos "en el lugar" (sin copiarlos) y que el gestor trabaje con carpetas autorizadas. -->
+<key>LSSupportsOpeningDocumentsInPlace</key>
+<true/>
+<!-- No se declara ningún permiso de fotos/almacenamiento: el acceso es solo con el selector del sistema. -->
